@@ -58,6 +58,10 @@
         }
 
         /* Pizza Oven Coal/Ember Animation */
+        #particles {
+            position: relative;
+        }
+
         .particle {
             position: absolute;
             pointer-events: none;
@@ -1111,6 +1115,8 @@
                 if (Math.random() > 0.6) {
                     particle.style.animation = `emberFloat 10s ease-in-out infinite, emberPulse 2s ease-in-out infinite`;
                     particle.style.animationDelay = `${delay}s, ${delay + Math.random() * 2}s`;
+                } else {
+                    particle.style.animation = `emberFloat 10s ease-in-out infinite`;
                 }
 
                 container.appendChild(particle);
@@ -1157,6 +1163,8 @@
                 if (Math.random() > 0.4) {
                     particle.style.animation = `emberFloat 10s ease-in-out infinite, emberPulse 1.5s ease-in-out infinite`;
                     particle.style.animationDelay = `${delay}s, ${delay + Math.random()}s`;
+                } else {
+                    particle.style.animation = `emberFloat 10s ease-in-out infinite`;
                 }
 
                 container.appendChild(particle);
