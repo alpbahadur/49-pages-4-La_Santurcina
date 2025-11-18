@@ -104,6 +104,96 @@
             }
         }
 
+        /* Smoke Particle Animation */
+        .smoke {
+            animation: smokeRise 12s ease-out infinite;
+        }
+
+        @keyframes smokeRise {
+            0% {
+                transform: translateY(0) translateX(0) scale(0.5);
+                opacity: 0;
+                filter: blur(0px);
+            }
+            10% {
+                opacity: 0.15;
+                filter: blur(2px);
+            }
+            30% {
+                opacity: 0.25;
+                filter: blur(5px);
+            }
+            60% {
+                opacity: 0.2;
+                filter: blur(8px);
+            }
+            90% {
+                opacity: 0.05;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(var(--drift)) scale(2.5);
+                opacity: 0;
+                filter: blur(12px);
+            }
+        }
+
+        /* Spark Particle Animation */
+        .spark {
+            animation: sparkFly 3s ease-out infinite;
+        }
+
+        @keyframes sparkFly {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 1;
+                filter: brightness(2);
+            }
+            15% {
+                opacity: 1;
+                filter: brightness(2.5);
+            }
+            40% {
+                opacity: 0.8;
+                filter: brightness(1.8);
+            }
+            70% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-80vh) translateX(var(--drift)) scale(0.2);
+                opacity: 0;
+                filter: brightness(1);
+            }
+        }
+
+        /* Ash Particle Animation */
+        .ash {
+            animation: ashFloat 15s ease-in-out infinite;
+        }
+
+        @keyframes ashFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.6;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            85% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(var(--drift)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
         /* Fade In Animation */
         .fade-in {
             opacity: 0;
@@ -1074,6 +1164,150 @@
         }
 
         createEmbers();
+
+        // ========== SMOKE PARTICLES ==========
+        function createSmoke() {
+            const container = document.getElementById('particles');
+            const smokeCount = window.innerWidth < 768 ? 8 : 15;
+
+            const smokeColors = [
+                'rgba(100, 100, 100, 0.3)',   // Dark gray smoke
+                'rgba(120, 120, 120, 0.25)',  // Medium gray smoke
+                'rgba(80, 80, 80, 0.35)',     // Darker smoke
+                'rgba(90, 85, 75, 0.3)'       // Warm gray smoke
+            ];
+
+            for (let i = 0; i < smokeCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle smoke';
+
+                // Large smoke particles
+                const size = Math.random() * 60 + 40;
+
+                // Random horizontal position
+                const startX = Math.random() * window.innerWidth;
+                const drift = (Math.random() - 0.5) * 300;
+
+                // Random color
+                const color = smokeColors[Math.floor(Math.random() * smokeColors.length)];
+
+                // Random delay
+                const delay = Math.random() * 12;
+
+                // Soft rounded shapes
+                const borderRadius = '50%';
+
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${startX}px`;
+                particle.style.bottom = `-${Math.random() * 100}px`;
+                particle.style.background = `radial-gradient(circle, ${color} 0%, transparent 70%)`;
+                particle.style.borderRadius = borderRadius;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.setProperty('--drift', `${drift}px`);
+
+                container.appendChild(particle);
+            }
+        }
+
+        createSmoke();
+
+        // ========== SPARK PARTICLES ==========
+        function createSparks() {
+            const container = document.getElementById('particles');
+            const sparkCount = window.innerWidth < 768 ? 12 : 25;
+
+            const sparkColors = [
+                'rgba(255, 220, 100, 0.9)',   // Bright yellow
+                'rgba(255, 200, 50, 0.95)',   // Golden yellow
+                'rgba(255, 180, 80, 0.9)',    // Orange-yellow
+                'rgba(255, 240, 150, 0.85)'   // Pale yellow
+            ];
+
+            for (let i = 0; i < sparkCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle spark';
+
+                // Tiny sparks
+                const size = Math.random() * 3 + 1;
+
+                // Random position with concentration at bottom center
+                const centerSpread = 0.7;
+                const startX = (window.innerWidth * (0.5 - centerSpread/2)) +
+                               (Math.random() * window.innerWidth * centerSpread);
+                const drift = (Math.random() - 0.5) * 180;
+
+                // Bright spark color
+                const color = sparkColors[Math.floor(Math.random() * sparkColors.length)];
+
+                // Staggered delays
+                const delay = Math.random() * 3;
+
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${startX}px`;
+                particle.style.bottom = `-${Math.random() * 20}px`;
+                particle.style.background = color;
+                particle.style.borderRadius = '50%';
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.setProperty('--drift', `${drift}px`);
+                particle.style.boxShadow = `0 0 3px ${color}, 0 0 6px ${color}`;
+
+                container.appendChild(particle);
+            }
+        }
+
+        createSparks();
+
+        // ========== ASH PARTICLES ==========
+        function createAsh() {
+            const container = document.getElementById('particles');
+            const ashCount = window.innerWidth < 768 ? 10 : 20;
+
+            const ashColors = [
+                'rgba(200, 200, 200, 0.4)',   // Light gray ash
+                'rgba(180, 180, 180, 0.5)',   // Medium gray ash
+                'rgba(220, 220, 220, 0.35)',  // Very light ash
+                'rgba(160, 160, 160, 0.45)'   // Darker ash
+            ];
+
+            for (let i = 0; i < ashCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle ash';
+
+                // Small ash particles
+                const baseSize = Math.random() * 4 + 2;
+                const sizeVariation = Math.random() * 0.8 + 0.6;
+                const width = baseSize * sizeVariation;
+                const height = baseSize * (1 / sizeVariation);
+
+                // Random position
+                const startX = Math.random() * window.innerWidth;
+                const drift = (Math.random() - 0.5) * 250;
+
+                // Ash color
+                const color = ashColors[Math.floor(Math.random() * ashColors.length)];
+
+                // Random delay
+                const delay = Math.random() * 15;
+
+                // Irregular shapes
+                const borderRadius = `${Math.random() * 50 + 25}% ${Math.random() * 50 + 25}% ${Math.random() * 50 + 25}% ${Math.random() * 50 + 25}%`;
+
+                particle.style.width = `${width}px`;
+                particle.style.height = `${height}px`;
+                particle.style.left = `${startX}px`;
+                particle.style.bottom = `-${Math.random() * 40}px`;
+                particle.style.background = color;
+                particle.style.borderRadius = borderRadius;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.setProperty('--drift', `${drift}px`);
+
+                container.appendChild(particle);
+            }
+        }
+
+        createAsh();
 
         // ========== NAVIGATION SCROLL EFFECT ==========
         const navbar = document.getElementById('navbar');
