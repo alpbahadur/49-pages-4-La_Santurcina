@@ -272,15 +272,152 @@
             opacity: 1;
         }
 
+        /* Oven Proximity Heat Effects */
+        .heat-vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(
+                ellipse 120% 80% at 50% 120%,
+                rgba(255, 87, 34, 0.3) 0%,
+                rgba(255, 140, 0, 0.2) 15%,
+                rgba(255, 69, 0, 0.15) 25%,
+                transparent 50%
+            );
+            animation: heatPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes heatPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 0.85; }
+        }
+
+        .heat-shimmer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 2;
+            background:
+                linear-gradient(
+                    0deg,
+                    rgba(255, 140, 0, 0.05) 0%,
+                    transparent 40%
+                );
+            animation: shimmerWave 3s ease-in-out infinite;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes shimmerWave {
+            0%, 100% {
+                transform: translateY(0) scaleY(1);
+                opacity: 0.4;
+            }
+            25% {
+                transform: translateY(-10px) scaleY(1.02);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-5px) scaleY(0.98);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translateY(-15px) scaleY(1.03);
+                opacity: 0.7;
+            }
+        }
+
+        .flame-edge {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .flame-left {
+            left: 0;
+            bottom: 0;
+            width: 150px;
+            height: 40vh;
+            background: linear-gradient(
+                to right,
+                rgba(255, 87, 34, 0.3) 0%,
+                rgba(255, 140, 0, 0.15) 30%,
+                transparent 100%
+            );
+            animation: flameFlickerLeft 2s ease-in-out infinite;
+        }
+
+        .flame-right {
+            right: 0;
+            bottom: 0;
+            width: 150px;
+            height: 40vh;
+            background: linear-gradient(
+                to left,
+                rgba(255, 87, 34, 0.3) 0%,
+                rgba(255, 140, 0, 0.15) 30%,
+                transparent 100%
+            );
+            animation: flameFlickerRight 2.3s ease-in-out infinite;
+        }
+
+        @keyframes flameFlickerLeft {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scaleX(1) scaleY(1);
+            }
+            25% {
+                opacity: 0.5;
+                transform: scaleX(1.1) scaleY(1.05);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scaleX(0.95) scaleY(0.98);
+            }
+            75% {
+                opacity: 0.6;
+                transform: scaleX(1.05) scaleY(1.02);
+            }
+        }
+
+        @keyframes flameFlickerRight {
+            0%, 100% {
+                opacity: 0.4;
+                transform: scaleX(1) scaleY(1);
+            }
+            30% {
+                opacity: 0.6;
+                transform: scaleX(1.08) scaleY(1.03);
+            }
+            60% {
+                opacity: 0.35;
+                transform: scaleX(0.98) scaleY(0.97);
+            }
+            80% {
+                opacity: 0.55;
+                transform: scaleX(1.03) scaleY(1.01);
+            }
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+            .flame-left, .flame-right {
+                width: 80px;
+                height: 30vh;
+            }
         }
     </style>
 </head>
 <body class="bg-[#0D0D0D]">
+
+    <!-- Oven Proximity Heat Effects -->
+    <div class="heat-vignette"></div>
+    <div class="heat-shimmer"></div>
+    <div class="flame-edge flame-left"></div>
+    <div class="flame-edge flame-right"></div>
 
     <!-- Particle Container -->
     <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
@@ -822,7 +959,9 @@
         // ========== PIZZA OVEN EMBER SYSTEM ==========
         function createEmbers() {
             const container = document.getElementById('particles');
-            const emberCount = window.innerWidth < 768 ? 25 : 50;
+            // Increased ember count for oven proximity effect
+            const baseEmberCount = window.innerWidth < 768 ? 35 : 70;
+            const hotZoneEmberCount = window.innerWidth < 768 ? 15 : 30;
 
             // Coal/ember colors - warm oranges, reds, and yellows
             const emberColors = [
@@ -834,19 +973,29 @@
                 'rgba(255, 120, 40, 0.8)'   // Warm orange
             ];
 
-            for (let i = 0; i < emberCount; i++) {
+            // Hot zone colors (more intense for bottom embers)
+            const hotEmberColors = [
+                'rgba(255, 69, 0, 0.95)',   // Intense orange-red
+                'rgba(255, 87, 34, 0.9)',   // Bright red-orange
+                'rgba(255, 140, 0, 1)',     // Full deep orange
+                'rgba(255, 120, 0, 0.95)'   // Bright warm orange
+            ];
+
+            // Create regular embers (distributed throughout)
+            for (let i = 0; i < baseEmberCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle ember';
 
                 // Random size (irregular coal pieces)
                 const baseSize = Math.random() * 6 + 2;
-                const sizeVariation = Math.random() * 0.7 + 0.7; // 0.7 to 1.4
+                const sizeVariation = Math.random() * 0.7 + 0.7;
                 const width = baseSize * sizeVariation;
                 const height = baseSize * (1 / sizeVariation);
 
-                // Random position
-                const startX = Math.random() * window.innerWidth;
-                const drift = (Math.random() - 0.5) * 200; // Drift left or right
+                // Random position with slight weighting toward center
+                const centerBias = (Math.random() + Math.random()) / 2; // Bias toward 0.5
+                const startX = centerBias * window.innerWidth;
+                const drift = (Math.random() - 0.5) * 200;
 
                 // Random color from coal/ember palette
                 const color = emberColors[Math.floor(Math.random() * emberColors.length)];
@@ -872,6 +1021,52 @@
                 if (Math.random() > 0.6) {
                     particle.style.animation = `emberFloat 10s ease-in-out infinite, emberPulse 2s ease-in-out infinite`;
                     particle.style.animationDelay = `${delay}s, ${delay + Math.random() * 2}s`;
+                }
+
+                container.appendChild(particle);
+            }
+
+            // Create hot zone embers (concentrated at bottom - oven proximity)
+            for (let i = 0; i < hotZoneEmberCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle ember';
+
+                // Larger embers for hot zone
+                const baseSize = Math.random() * 8 + 4;
+                const sizeVariation = Math.random() * 0.7 + 0.7;
+                const width = baseSize * sizeVariation;
+                const height = baseSize * (1 / sizeVariation);
+
+                // Concentrated in center-bottom (oven opening position)
+                const centerSpread = 0.6; // Keep within center 60% of screen
+                const startX = (window.innerWidth * (0.5 - centerSpread/2)) +
+                               (Math.random() * window.innerWidth * centerSpread);
+                const drift = (Math.random() - 0.5) * 150;
+
+                // Hot ember colors
+                const color = hotEmberColors[Math.floor(Math.random() * hotEmberColors.length)];
+
+                // Shorter delays for hot zone (more frequent)
+                const delay = Math.random() * 5;
+
+                // More circular shapes for hot zone embers
+                const borderRadius = `${Math.random() * 40 + 40}% ${Math.random() * 40 + 40}% ${Math.random() * 40 + 40}% ${Math.random() * 40 + 40}%`;
+
+                // Apply styles
+                particle.style.width = `${width}px`;
+                particle.style.height = `${height}px`;
+                particle.style.left = `${startX}px`;
+                particle.style.bottom = `-${Math.random() * 30}px`; // Spawn closer to bottom
+                particle.style.background = color;
+                particle.style.borderRadius = borderRadius;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.setProperty('--drift', `${drift}px`);
+                particle.style.setProperty('--glow-color', color);
+
+                // Most hot zone embers pulse (they're more active)
+                if (Math.random() > 0.4) {
+                    particle.style.animation = `emberFloat 10s ease-in-out infinite, emberPulse 1.5s ease-in-out infinite`;
+                    particle.style.animationDelay = `${delay}s, ${delay + Math.random()}s`;
                 }
 
                 container.appendChild(particle);
