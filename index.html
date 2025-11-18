@@ -1049,9 +1049,9 @@
         // ========== PIZZA OVEN EMBER SYSTEM ==========
         function createEmbers() {
             const container = document.getElementById('particles');
-            // Increased ember count for oven proximity effect
-            const baseEmberCount = window.innerWidth < 768 ? 35 : 70;
-            const hotZoneEmberCount = window.innerWidth < 768 ? 15 : 30;
+            // Reduced ember count (65% reduction)
+            const baseEmberCount = window.innerWidth < 768 ? 12 : 25;
+            const hotZoneEmberCount = window.innerWidth < 768 ? 5 : 10;
 
             // Coal/ember colors - warm oranges, reds, and yellows (subtle)
             const emberColors = [
@@ -1076,8 +1076,8 @@
                 const particle = document.createElement('div');
                 particle.className = 'particle ember';
 
-                // Random size (irregular coal pieces)
-                const baseSize = Math.random() * 6 + 2;
+                // Random size (irregular coal pieces) - smaller
+                const baseSize = Math.random() * 4 + 1;
                 const sizeVariation = Math.random() * 0.7 + 0.7;
                 const width = baseSize * sizeVariation;
                 const height = baseSize * (1 / sizeVariation);
@@ -1123,8 +1123,8 @@
                 const particle = document.createElement('div');
                 particle.className = 'particle ember';
 
-                // Larger embers for hot zone
-                const baseSize = Math.random() * 8 + 4;
+                // Larger embers for hot zone - smaller
+                const baseSize = Math.random() * 5 + 2;
                 const sizeVariation = Math.random() * 0.7 + 0.7;
                 const width = baseSize * sizeVariation;
                 const height = baseSize * (1 / sizeVariation);
@@ -1219,7 +1219,7 @@
         // ========== SPARK PARTICLES ==========
         function createSparks() {
             const container = document.getElementById('particles');
-            const sparkCount = window.innerWidth < 768 ? 12 : 25;
+            const sparkCount = window.innerWidth < 768 ? 4 : 9;
 
             const sparkColors = [
                 'rgba(255, 220, 100, 0.4)',   // Bright yellow
@@ -1232,8 +1232,8 @@
                 const particle = document.createElement('div');
                 particle.className = 'particle spark';
 
-                // Tiny sparks
-                const size = Math.random() * 3 + 1;
+                // Tiny sparks - smaller
+                const size = Math.random() * 2 + 0.5;
 
                 // Random position with concentration at bottom center
                 const centerSpread = 0.7;
