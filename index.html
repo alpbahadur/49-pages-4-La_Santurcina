@@ -370,17 +370,17 @@
             z-index: 1;
             background: radial-gradient(
                 ellipse 120% 80% at 50% 120%,
-                rgba(255, 87, 34, 0.3) 0%,
-                rgba(255, 140, 0, 0.2) 15%,
-                rgba(255, 69, 0, 0.15) 25%,
+                rgba(255, 87, 34, 0.15) 0%,
+                rgba(255, 140, 0, 0.1) 15%,
+                rgba(255, 69, 0, 0.08) 25%,
                 transparent 50%
             );
             animation: heatPulse 4s ease-in-out infinite;
         }
 
         @keyframes heatPulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0.85; }
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.6; }
         }
 
         .heat-shimmer {
@@ -430,8 +430,8 @@
             height: 40vh;
             background: linear-gradient(
                 to right,
-                rgba(255, 87, 34, 0.3) 0%,
-                rgba(255, 140, 0, 0.15) 30%,
+                rgba(255, 87, 34, 0.15) 0%,
+                rgba(255, 140, 0, 0.08) 30%,
                 transparent 100%
             );
             animation: flameFlickerLeft 2s ease-in-out infinite;
@@ -444,8 +444,8 @@
             height: 40vh;
             background: linear-gradient(
                 to left,
-                rgba(255, 87, 34, 0.3) 0%,
-                rgba(255, 140, 0, 0.15) 30%,
+                rgba(255, 87, 34, 0.15) 0%,
+                rgba(255, 140, 0, 0.08) 30%,
                 transparent 100%
             );
             animation: flameFlickerRight 2.3s ease-in-out infinite;
@@ -1053,22 +1053,22 @@
             const baseEmberCount = window.innerWidth < 768 ? 35 : 70;
             const hotZoneEmberCount = window.innerWidth < 768 ? 15 : 30;
 
-            // Coal/ember colors - warm oranges, reds, and yellows
+            // Coal/ember colors - warm oranges, reds, and yellows (subtle)
             const emberColors = [
-                'rgba(255, 140, 0, 0.9)',   // Deep orange
-                'rgba(255, 87, 34, 0.8)',   // Red-orange
-                'rgba(255, 193, 7, 0.7)',   // Golden
-                'rgba(255, 69, 0, 0.85)',   // Orange-red
-                'rgba(255, 165, 0, 0.75)',  // Orange
-                'rgba(255, 120, 40, 0.8)'   // Warm orange
+                'rgba(255, 140, 0, 0.4)',   // Deep orange
+                'rgba(255, 87, 34, 0.35)',  // Red-orange
+                'rgba(255, 193, 7, 0.3)',   // Golden
+                'rgba(255, 69, 0, 0.4)',    // Orange-red
+                'rgba(255, 165, 0, 0.35)',  // Orange
+                'rgba(255, 120, 40, 0.35)'  // Warm orange
             ];
 
             // Hot zone colors (more intense for bottom embers)
             const hotEmberColors = [
-                'rgba(255, 69, 0, 0.95)',   // Intense orange-red
-                'rgba(255, 87, 34, 0.9)',   // Bright red-orange
-                'rgba(255, 140, 0, 1)',     // Full deep orange
-                'rgba(255, 120, 0, 0.95)'   // Bright warm orange
+                'rgba(255, 69, 0, 0.5)',    // Intense orange-red
+                'rgba(255, 87, 34, 0.45)',  // Bright red-orange
+                'rgba(255, 140, 0, 0.5)',   // Full deep orange
+                'rgba(255, 120, 0, 0.45)'   // Bright warm orange
             ];
 
             // Create regular embers (distributed throughout)
@@ -1222,10 +1222,10 @@
             const sparkCount = window.innerWidth < 768 ? 12 : 25;
 
             const sparkColors = [
-                'rgba(255, 220, 100, 0.9)',   // Bright yellow
-                'rgba(255, 200, 50, 0.95)',   // Golden yellow
-                'rgba(255, 180, 80, 0.9)',    // Orange-yellow
-                'rgba(255, 240, 150, 0.85)'   // Pale yellow
+                'rgba(255, 220, 100, 0.4)',   // Bright yellow
+                'rgba(255, 200, 50, 0.45)',   // Golden yellow
+                'rgba(255, 180, 80, 0.4)',    // Orange-yellow
+                'rgba(255, 240, 150, 0.35)'   // Pale yellow
             ];
 
             for (let i = 0; i < sparkCount; i++) {
