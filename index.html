@@ -54,20 +54,51 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* Particle Animation */
+        /* Pizza Oven Coal/Ember Animation */
         .particle {
             position: absolute;
-            border-radius: 50%;
-            background: rgba(224, 160, 75, 0.3);
             pointer-events: none;
-            animation: float 8s ease-in-out infinite;
+            filter: blur(1px);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        .ember {
+            animation: emberFloat 10s ease-in-out infinite;
+        }
+
+        @keyframes emberFloat {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+                opacity: 0;
+                filter: brightness(1) blur(1px);
+            }
+            5% { opacity: 0.8; }
+            10% {
+                opacity: 1;
+                filter: brightness(1.5) blur(1px);
+            }
+            30% {
+                filter: brightness(1.8) blur(1.5px);
+            }
+            70% {
+                filter: brightness(1.2) blur(2px);
+            }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-120vh) translateX(var(--drift)) rotate(720deg) scale(0.3);
+                opacity: 0;
+                filter: brightness(0.5) blur(3px);
+            }
+        }
+
+        @keyframes emberPulse {
+            0%, 100% {
+                box-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color);
+                filter: brightness(1);
+            }
+            50% {
+                box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
+                filter: brightness(1.5);
+            }
         }
 
         /* Fade In Animation */
@@ -442,19 +473,55 @@
                 </div>
             </div>
 
-            <!-- Press Mentions -->
+            <!-- Press & Accolades -->
             <div class="mt-20 fade-in">
-                <h3 class="text-3xl font-light text-center mb-12" style="font-family: 'Montserrat', sans-serif; color: #1A1A1A;">
-                    Reconocimientos
+                <h3 class="text-3xl md:text-4xl font-light text-center mb-4" style="font-family: 'Montserrat', sans-serif; color: #1A1A1A;">
+                    Press & Accolades
                 </h3>
-                <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    <div class="p-6 bg-white rounded-lg shadow-lg">
-                        <p class="text-lg font-medium mb-2" style="color: #1A1A1A;">Bon Appétit</p>
-                        <p class="text-sm" style="color: #6B7280;">"The Pizza in Puerto Rico Is So, So Good Right Now"</p>
+                <div class="section-divider"></div>
+                <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto mt-12">
+                    <!-- Bon Appétit -->
+                    <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-[#E0A04B]">
+                        <div class="flex items-start gap-3">
+                            <div class="text-3xl">🍕</div>
+                            <div>
+                                <p class="text-xl font-medium mb-2" style="color: #1A1A1A;">Bon Appétit</p>
+                                <p class="text-sm italic" style="color: #6B7280;">"The Pizza in Puerto Rico Is So, So Good Right Now"</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="p-6 bg-white rounded-lg shadow-lg">
-                        <p class="text-lg font-medium mb-2" style="color: #1A1A1A;">Eater</p>
-                        <p class="text-sm" style="color: #6B7280;">"The 25 Essential San Juan Restaurants"</p>
+
+                    <!-- Eater -->
+                    <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-[#E0A04B]">
+                        <div class="flex items-start gap-3">
+                            <div class="text-3xl">🍽️</div>
+                            <div>
+                                <p class="text-xl font-medium mb-2" style="color: #1A1A1A;">Eater</p>
+                                <p class="text-sm italic" style="color: #6B7280;">"The 25 Essential San Juan Restaurants"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- James Beard -->
+                    <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-[#E0A04B]">
+                        <div class="flex items-start gap-3">
+                            <div class="text-3xl">🏆</div>
+                            <div>
+                                <p class="text-xl font-medium mb-2" style="color: #1A1A1A;">James Beard Foundation</p>
+                                <p class="text-sm italic" style="color: #6B7280;">Multiple Semifinalist Nominations</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- El Nuevo Día -->
+                    <div class="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border-l-4 border-[#E0A04B]">
+                        <div class="flex items-start gap-3">
+                            <div class="text-3xl">📰</div>
+                            <div>
+                                <p class="text-xl font-medium mb-2" style="color: #1A1A1A;">El Nuevo Día</p>
+                                <p class="text-sm italic" style="color: #6B7280;">"Una de las pizzerías de moda del área metro"</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -735,30 +802,66 @@
 
     <!-- JavaScript -->
     <script>
-        // ========== PARTICLE SYSTEM ==========
-        function createParticles() {
+        // ========== PIZZA OVEN EMBER SYSTEM ==========
+        function createEmbers() {
             const container = document.getElementById('particles');
-            const particleCount = window.innerWidth < 768 ? 20 : 40;
+            const emberCount = window.innerWidth < 768 ? 25 : 50;
 
-            for (let i = 0; i < particleCount; i++) {
+            // Coal/ember colors - warm oranges, reds, and yellows
+            const emberColors = [
+                'rgba(255, 140, 0, 0.9)',   // Deep orange
+                'rgba(255, 87, 34, 0.8)',   // Red-orange
+                'rgba(255, 193, 7, 0.7)',   // Golden
+                'rgba(255, 69, 0, 0.85)',   // Orange-red
+                'rgba(255, 165, 0, 0.75)',  // Orange
+                'rgba(255, 120, 40, 0.8)'   // Warm orange
+            ];
+
+            for (let i = 0; i < emberCount; i++) {
                 const particle = document.createElement('div');
-                particle.className = 'particle';
+                particle.className = 'particle ember';
 
-                const size = Math.random() * 4 + 2;
+                // Random size (irregular coal pieces)
+                const baseSize = Math.random() * 6 + 2;
+                const sizeVariation = Math.random() * 0.7 + 0.7; // 0.7 to 1.4
+                const width = baseSize * sizeVariation;
+                const height = baseSize * (1 / sizeVariation);
+
+                // Random position
                 const startX = Math.random() * window.innerWidth;
-                const delay = Math.random() * 8;
+                const drift = (Math.random() - 0.5) * 200; // Drift left or right
 
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
+                // Random color from coal/ember palette
+                const color = emberColors[Math.floor(Math.random() * emberColors.length)];
+
+                // Random delay for staggered animation
+                const delay = Math.random() * 10;
+
+                // Irregular shape using border-radius
+                const borderRadius = `${Math.random() * 60 + 20}% ${Math.random() * 60 + 20}% ${Math.random() * 60 + 20}% ${Math.random() * 60 + 20}%`;
+
+                // Apply styles
+                particle.style.width = `${width}px`;
+                particle.style.height = `${height}px`;
                 particle.style.left = `${startX}px`;
-                particle.style.bottom = '0';
+                particle.style.bottom = `-${Math.random() * 50}px`;
+                particle.style.background = color;
+                particle.style.borderRadius = borderRadius;
                 particle.style.animationDelay = `${delay}s`;
+                particle.style.setProperty('--drift', `${drift}px`);
+                particle.style.setProperty('--glow-color', color);
+
+                // Add pulsing glow effect to some embers
+                if (Math.random() > 0.6) {
+                    particle.style.animation = `emberFloat 10s ease-in-out infinite, emberPulse 2s ease-in-out infinite`;
+                    particle.style.animationDelay = `${delay}s, ${delay + Math.random() * 2}s`;
+                }
 
                 container.appendChild(particle);
             }
         }
 
-        createParticles();
+        createEmbers();
 
         // ========== NAVIGATION SCROLL EFFECT ==========
         const navbar = document.getElementById('navbar');
